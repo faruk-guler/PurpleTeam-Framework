@@ -1,0 +1,28 @@
+Ağ Taramaları
+Sistem Hacking
+Sızma Testi Nasıl Planlanır?
+Sızma Testi Gerçekleştirme Yöntemleri
+İç ve Dış Ağlara Yönelik Zafiyet Tespitleri
+Aktif Bilgi Toplama ve Port Tarama Yöntemleri
+Sızma Testi Adımları
+Sızma Testi Araçları
+Sızma Testi Metodolojisi
+Uygulamalı Saldırı Teknikleri
+Kali Linux Pentest Makinesini Tanıma
+Metasploitable-2 Kurban Makinesi
+Ağ Ortamında Sistemlerin Keşfi
+Port ve Servis Tarama
+Tespit Edilen Zafiyetli Servislerin Hacklenmesi
+Bind Shell ve Reserve Shell Kavramları
+Web Zafiyetleri
+SQL Injection
+XSS
+Command Injection
+LFI
+CSRF
+Dosya Yükleme Zafiyetleri
+Burpsuite Kullanımı
+Ödül Avcılığı Kavramı
+Siber Güvenlik Uygulama Platformları
+Capture the Flag Kavramı
+Siber Güvenlik Kariyer Planlama
